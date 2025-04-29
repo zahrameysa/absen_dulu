@@ -1,5 +1,6 @@
 import 'package:absen_dulu/screen/annual_leave_screen.dart';
 import 'package:absen_dulu/screen/check_out_screen.dart';
+import 'package:absen_dulu/screen/history_screen.dart';
 import 'package:absen_dulu/screen/permission_screen.dart';
 import 'package:absen_dulu/screen/sick_screen.dart';
 import 'package:absen_dulu/screen/edit_profile_screen.dart';
@@ -245,11 +246,17 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: const Color(0xFF0D3B66),
         unselectedItemColor: Colors.black45,
         showUnselectedLabels: true,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HistoryScreen()),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.access_time), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         ],
       ),
     );

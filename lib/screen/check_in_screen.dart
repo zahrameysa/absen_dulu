@@ -214,23 +214,23 @@ class _CheckInScreenState extends State<CheckInScreen> {
                               style: const TextStyle(fontSize: 14),
                             ),
                             const SizedBox(height: 16),
-                            Row(
-                              children: const [
-                                Icon(Icons.notes, size: 20),
-                                SizedBox(width: 8),
-                                Text("Note (Optional)"),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _noteController,
-                              decoration: InputDecoration(
-                                hintText: "Add a note...",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                            ),
+                            // Row(
+                            //   children: const [
+                            //     Icon(Icons.notes, size: 20),
+                            //     SizedBox(width: 8),
+                            //     Text("Note (Optional)"),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 8),
+                            // TextField(
+                            //   controller: _noteController,
+                            //   decoration: InputDecoration(
+                            //     hintText: "Add a note...",
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //   ),
+                            // ),
                             const SizedBox(height: 20),
                             SizedBox(
                               width: double.infinity,
