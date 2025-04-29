@@ -2,16 +2,13 @@ import 'dart:convert';
 import 'package:absen_dulu/services/pref_handler.dart';
 import 'package:http/http.dart' as http;
 
-
-class CheckInService {
+class CheckOutService {
   final String baseUrl = 'http://absen.quidi.id/api'; // Ganti kalau nanti perlu
 
-  Future<Map<String, dynamic>> checkIn({
+  Future<Map<String, dynamic>> checkOut({
     required double lat,
     required double lng,
     required String address,
-    String status = 'masuk', // default check in masuk
-    String? alasanIzin, // opsional kalau izin
   }) async {
     final String token = await PreferenceHandler.getToken();
 
@@ -19,18 +16,13 @@ class CheckInService {
       throw Exception('Token tidak ditemukan. Harap login ulang.');
     }
 
-    final url = Uri.parse('$baseUrl/absen/check-in');
+    final url = Uri.parse('$baseUrl/absen/check-out');
 
     final body = {
-      'check_in_lat': lat.toString(),
-      'check_in_lng': lng.toString(),
-      'check_in_address': address,
-      'status': status, // "masuk" atau "izin"
+      'check_out_lat': lat.toString(),
+      'check_out_lng': lng.toString(),
+      'check_out_address': address,
     };
-
-    if (status == 'izin' && alasanIzin != null) {
-      body['alasan_izin'] = alasanIzin;
-    }
 
     final response = await http.post(
       url,
@@ -42,7 +34,7 @@ class CheckInService {
       return jsonDecode(response.body);
     } else {
       final error = jsonDecode(response.body);
-      throw Exception(error['message'] ?? 'Gagal melakukan Check In.');
+      throw Exception(error['message'] ?? 'Gagal melakukan Check Out.');
     }
   }
 }

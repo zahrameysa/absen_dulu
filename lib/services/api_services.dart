@@ -60,6 +60,10 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         PreferenceHandler.saveToken(responsedata.data!.token.toString());
+        PreferenceHandler.saveEmail(responsedata.data!.user!.email.toString());
+        PreferenceHandler.saveName(responsedata.data!.user!.name.toString());
+
+        print(responsedata.data!.token.toString());
         return registerDataFromJson(response.body);
       } else {
         print('Error body: ${response.body}');

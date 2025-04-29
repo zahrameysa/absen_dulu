@@ -1,29 +1,27 @@
 import 'dart:async';
-import 'package:absen_dulu/services/pref_handler.dart';
+import 'package:absen_dulu/services/check_out_service.dart';
+import 'package:absen_dulu/services/geo_service.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../services/check_in_service.dart';
-import '../services/geo_service.dart'; // Pakai geo service buatanmu
-import '../utils/constants.dart'; // Misal nanti buat warna standar
+import 'package:geocoding/geocoding.dart';
 
-class CheckInScreen extends StatefulWidget {
-  const CheckInScreen({Key? key}) : super(key: key);
+class CheckOutScreen extends StatefulWidget {
+  const CheckOutScreen({Key? key}) : super(key: key);
 
   @override
-  State<CheckInScreen> createState() => _CheckInScreenState();
+  State<CheckOutScreen> createState() => _CheckOutScreenState();
 }
 
-class _CheckInScreenState extends State<CheckInScreen> {
+class _CheckOutScreenState extends State<CheckOutScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   final TextEditingController _noteController = TextEditingController();
-  final CheckInService _checkInService = CheckInService();
+  final CheckOutService _checkOutService =
+      CheckOutService(); // buat service baru
 
   LatLng? _currentPosition;
   String _currentAddress = "Mendeteksi lokasi...";
   bool _isLoadingLocation = true;
-  bool _isCheckingIn = false;
+  bool _isCheckingOut = false;
 
   late Timer _timer;
   String _currentTime = '';
@@ -31,13 +29,13 @@ class _CheckInScreenState extends State<CheckInScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchLocation(); // hanya fetch lokasi
+    _fetchLocation();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _startClock(); // pindahkan startClock() ke sini
+    _startClock();
   }
 
   void _startClock() {
@@ -94,7 +92,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
     }
   }
 
-  Future<void> _handleCheckIn() async {
+  Future<void> _handleCheckOut() async {
     if (_currentPosition == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lokasi belum tersedia. Coba lagi.')),
@@ -102,24 +100,25 @@ class _CheckInScreenState extends State<CheckInScreen> {
       return;
     }
 
-    setState(() => _isCheckingIn = true);
+    setState(() => _isCheckingOut = true);
 
     try {
-      final result = await _checkInService.checkIn(
+      final result = await _checkOutService.checkOut(
         lat: _currentPosition!.latitude,
         lng: _currentPosition!.longitude,
         address: _currentAddress,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message'] ?? 'Check-In sukses!')),
+        SnackBar(content: Text(result['message'] ?? 'Check-Out sukses!')),
       );
+      Navigator.pop(context); // balik ke Home setelah sukses
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Gagal Check-In: $e')));
+      ).showSnackBar(SnackBar(content: Text('Gagal Check-Out: $e')));
     } finally {
-      setState(() => _isCheckingIn = false);
+      setState(() => _isCheckingOut = false);
     }
   }
 
@@ -144,8 +143,6 @@ class _CheckInScreenState extends State<CheckInScreen> {
                           (controller) => _controller.complete(controller),
                     ),
                   ),
-
-                  // ✨ Tambahkan tombol back ke Home di sini
                   Positioned(
                     top: 40,
                     left: 16,
@@ -153,12 +150,11 @@ class _CheckInScreenState extends State<CheckInScreen> {
                       mini: true,
                       backgroundColor: Colors.white,
                       onPressed: () {
-                        Navigator.pop(context); // <-- balik ke HomeScreen
+                        Navigator.pop(context);
                       },
                       child: const Icon(Icons.arrow_back, color: Colors.black),
                     ),
                   ),
-
                   DraggableScrollableSheet(
                     initialChildSize: 0.4,
                     minChildSize: 0.3,
@@ -244,16 +240,16 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                   elevation: 4,
                                 ),
                                 onPressed:
-                                    (_isCheckingIn || _currentPosition == null)
+                                    (_isCheckingOut || _currentPosition == null)
                                         ? null
-                                        : _handleCheckIn,
+                                        : _handleCheckOut,
                                 child:
-                                    _isCheckingIn
+                                    _isCheckingOut
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
                                         : const Text(
-                                          "Check In",
+                                          "Check Out",
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
-import 'package:absen_dulu/screen/auth/log_in_screen.dart';
-import 'package:absen_dulu/screen/auth/sign_up_screen.dart'; // Tambahkan ini
+import 'package:absen_dulu/screen/log_in_screen.dart';
+import 'package:absen_dulu/screen/sign_up_screen.dart'; // Tambahkan ini
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

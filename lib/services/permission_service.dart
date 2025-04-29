@@ -2,16 +2,14 @@ import 'dart:convert';
 import 'package:absen_dulu/services/pref_handler.dart';
 import 'package:http/http.dart' as http;
 
+class PermissionService {
+  final String baseUrl = 'http://absen.quidi.id/api';
 
-class CheckInService {
-  final String baseUrl = 'http://absen.quidi.id/api'; // Ganti kalau nanti perlu
-
-  Future<Map<String, dynamic>> checkIn({
+  Future<Map<String, dynamic>> submitPermission({
     required double lat,
     required double lng,
     required String address,
-    String status = 'masuk', // default check in masuk
-    String? alasanIzin, // opsional kalau izin
+    required String reason,
   }) async {
     final String token = await PreferenceHandler.getToken();
 
@@ -25,24 +23,21 @@ class CheckInService {
       'check_in_lat': lat.toString(),
       'check_in_lng': lng.toString(),
       'check_in_address': address,
-      'status': status, // "masuk" atau "izin"
+      'status': 'izin',
+      'alasan_izin': reason,
     };
-
-    if (status == 'izin' && alasanIzin != null) {
-      body['alasan_izin'] = alasanIzin;
-    }
 
     final response = await http.post(
       url,
       headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
       body: body,
     );
-
+    print(token);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       final error = jsonDecode(response.body);
-      throw Exception(error['message'] ?? 'Gagal melakukan Check In.');
+      throw Exception(error['message'] ?? 'Gagal mengajukan izin.');
     }
   }
 }

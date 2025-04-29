@@ -1,7 +1,11 @@
+import 'package:absen_dulu/screen/annual_leave_screen.dart';
+import 'package:absen_dulu/screen/check_out_screen.dart';
+import 'package:absen_dulu/screen/permission_screen.dart';
+import 'package:absen_dulu/screen/sick_screen.dart';
+import 'package:absen_dulu/screen/edit_profile_screen.dart';
 import 'package:absen_dulu/screen/check_in_screen.dart';
 import 'package:absen_dulu/services/pref_handler.dart';
 import 'package:flutter/material.dart';
-// Tambahkan import CheckInScreen di bawah ini
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String token = '';
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: [
           Text(token),
-          // Background Image
           Positioned.fill(
             child: Image.asset(
               'assets/images/bg_home_screen.png',
@@ -38,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: Column(
               children: [
-                // Header
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
@@ -47,10 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage(
-                          'assets/images/profile.jpg',
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EditProfileScreen(),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage(
+                            'assets/images/profile.jpg',
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -80,10 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Attendance Card
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.all(20),
@@ -138,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CheckInScreen(),
+                                    builder: (context) => const CheckInScreen(),
                                   ),
                                 );
                               },
@@ -163,7 +173,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 16),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const CheckOutScreen(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF0D3B66),
                                 padding: const EdgeInsets.symmetric(
@@ -187,10 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
-                // Requests section
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
@@ -207,11 +222,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 25,
                     children: [
                       requestItem('Permission', 'assets/icons/permission.png'),
                       requestItem('Sick', 'assets/icons/sick.png'),
@@ -240,19 +256,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget requestItem(String title, String imagePath) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFE7F0FA),
-            borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: () {
+        if (title == 'Permission') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PermissionScreen()),
+          );
+        } else if (title == 'Sick') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SickScreen()),
+          );
+        } else if (title == 'Annual Leave') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AnnualLeaveScreen()),
+          );
+        }
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE7F0FA),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Image.asset(imagePath, width: 40, height: 40),
           ),
-          child: Image.asset(imagePath, width: 40, height: 40),
-        ),
-        const SizedBox(height: 8),
-        Text(title),
-      ],
+          const SizedBox(height: 8),
+          Text(title),
+        ],
+      ),
     );
   }
 }

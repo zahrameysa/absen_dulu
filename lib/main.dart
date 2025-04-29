@@ -1,4 +1,4 @@
-import 'package:absen_dulu/screen/auth/sign_up_screen.dart';
+import 'package:absen_dulu/screen/sign_up_screen.dart';
 import 'package:absen_dulu/screen/check_in_screen.dart';
 import 'package:absen_dulu/screen/home_screen.dart';
 import 'package:absen_dulu/screen/welcome_screen.dart';
