@@ -34,7 +34,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("History")),
+      appBar: AppBar(
+        title: const Text(
+          "History",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color(0xFF0D3B66),
+        centerTitle: true,
+        foregroundColor: Colors.white,
+      ),
+
       body: FutureBuilder<List<HistoryItem>>(
         future: _futureHistory,
         builder: (context, snapshot) {
@@ -81,12 +90,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            // Aksi hapus bisa ditambahkan di sini
-                          },
-                        ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.delete, color: Colors.red),
+                        //   onPressed: () {
+                        //     // Aksi hapus bisa ditambahkan di sini
+                        //   },
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 6),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:absen_dulu/screen/annual_leave_screen.dart';
 import 'package:absen_dulu/screen/check_out_screen.dart';
 import 'package:absen_dulu/screen/history_screen.dart';
@@ -7,6 +8,7 @@ import 'package:absen_dulu/screen/edit_profile_screen.dart';
 import 'package:absen_dulu/screen/check_in_screen.dart';
 import 'package:absen_dulu/services/pref_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,11 +19,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String token = '';
+  late Timer _timer;
+  late DateTime _now;
 
   @override
   void initState() {
     super.initState();
     getid();
+    _now = DateTime.now();
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() {
+        _now = DateTime.now();
+      });
+    });
   }
 
   void getid() async {
@@ -29,7 +39,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String formattedTime = DateFormat('hh:mm:ss a').format(_now);
+    String formattedDate = DateFormat('EEE, d MMMM yyyy').format(_now);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -60,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 30,
                           backgroundImage: AssetImage(
                             'assets/images/profile.jpg',
@@ -90,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const Spacer(),
-                      Icon(Icons.logout, color: Colors.white),
+                      const Icon(Icons.logout, color: Colors.white),
                     ],
                   ),
                 ),
@@ -116,16 +137,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        '09:41 AM',
-                        style: TextStyle(
+                      Text(
+                        formattedTime,
+                        style: const TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF6A72C1),
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text('Mon, 18 April 2023'),
+                      Text(formattedDate),
                       const Divider(height: 24),
                       const Text(
                         'Office Hours',
@@ -228,10 +249,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 25,
                     children: [
                       requestItem('Permission', 'assets/icons/permission.png'),
+                      const SizedBox(width: 25),
                       requestItem('Sick', 'assets/icons/sick.png'),
+                      const SizedBox(width: 25),
                       requestItem('Annual Leave', 'assets/icons/leave.png'),
                     ],
                   ),
